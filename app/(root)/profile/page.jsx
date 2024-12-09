@@ -129,12 +129,12 @@ function page() {
         >
           Change Password
         </button>
-        <button
+        {/* <button
           className="w-full py-3 bg-red-600 text-white font-semibold rounded-lg shadow-lg hover:bg-red-700 transition duration-200"
           onClick={handleDeleteAccount}
         >
           Delete Account
-        </button>
+        </button> */}
       </div>
     </div>
   );
