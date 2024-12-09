@@ -8,7 +8,9 @@ export default function Sidebar() {
   //   const handleNavigation = (route) => {
   //     router.push(route);
   //   };
-
+  const handleLogOut=()=>{
+    localStorage.removeItem('token');
+  }
   return (
     <div className="w-64 h-screen bg-gray-800 text-white fixed top-0 left-0">
       <Link href={"/"}>
@@ -18,33 +20,9 @@ export default function Sidebar() {
       </Link>
       <div className="mt-6 flex flex-col justify-between ">
         <div>
-          <Link href={"/tourists"}>
+          <Link href={"/"}>
             <button
               //   onClick={() => handleNavigation("/admin/dashboard?view=tourists")}
-              className="w-full flex items-center p-4 text-left hover:bg-gray-700"
-            >
-              <span className="material-icons mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                  />
-                </svg>
-              </span>
-              Tourists
-            </button>
-          </Link>
-          <Link href={"/other-users"}>
-            <button
-              //   onClick={() => handleNavigation("/admin/dashboard?view=users")}
               className="w-full flex items-center p-4 text-left hover:bg-gray-700"
             >
               <span className="material-icons mr-2">
@@ -63,7 +41,31 @@ export default function Sidebar() {
                   />
                 </svg>
               </span>
-              Other Users
+              All Users
+            </button>
+          </Link>
+          <Link href={"/pending-users"}>
+            <button
+              //   onClick={() => handleNavigation("/admin/dashboard?view=users")}
+              className="w-full flex items-center p-4 text-left hover:bg-gray-700"
+            >
+              <span className="material-icons mr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                  />
+                </svg>
+              </span>
+              Pending Users
             </button>
           </Link>
         </div>
@@ -92,7 +94,7 @@ export default function Sidebar() {
               Profile
             </button>
           </Link>
-          <Link href={"/login"}>
+          <Link href={"/login"} onClick={handleLogOut}>
             <button
               //   onClick={() => handleNavigation("/admin/dashboard?view=users")}
               className="w-full flex items-center p-4 text-left hover:bg-gray-700"

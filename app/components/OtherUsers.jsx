@@ -18,7 +18,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function TouristTable({data,onDelete}) {
+export default function OtherUsers({data,onDelete}) {
   const [people, setPeople] = useState(data);
   useEffect(()=>{
     setPeople(data)
@@ -29,7 +29,7 @@ export default function TouristTable({data,onDelete}) {
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, title,
+            A list of all the users other than Tourist in your account including their name, title,
             and email.
           </p>
         </div>
