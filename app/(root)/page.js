@@ -33,8 +33,11 @@ export default function Home() {
         setTourists(tourists);
         setOtherUsers(otherUsers);
       } catch (error) {
+        if(error.status == 401){
+          router.push("/login")
+        }
         console.error("Error fetching users:", error);
-        alert("Failed to fetch user data.");
+        // alert("Failed to fetch user data.");
       } finally {
         setLoading(false);
       }

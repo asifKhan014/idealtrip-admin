@@ -1,109 +1,363 @@
+// "use client";
+// import React, { useState, useEffect } from "react";
+
+// function ProfilePage() {
+//   const [editMode, setEditMode] = useState(false);
+//   const [userId, setUserId] = useState(null);
+//   const [fullName, setFullName] = useState("");
+//   const [displayName, setDisplayName] = useState(""); // Separate display name
+//   const [address, setAddress] = useState("");
+//   const [profilePhoto, setProfilePicture] = useState("");
+//   const [loading, setLoading] = useState(true);
+//   const [email, setEmail] = useState("");
+
+//   useEffect(() => {
+//     const storedUser = localStorage.getItem("user");
+//     if (storedUser) {
+//       try {
+//         const userObject = JSON.parse(storedUser);
+//         setUserId(userObject.userId);
+//       } catch (error) {
+//         console.error("Failed to parse user data from localStorage:", error);
+//       }
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     if (!userId) return;
+
+//     const fetchUserData = async () => {
+//       try {
+//         const response = await fetch(
+//           `https://localhost:7216/api/User/${userId}`
+//         );
+//         const data = await response.json();
+//         if (data.isSuccess) {
+//           setFullName(data.data.userName);
+//           setDisplayName(data.data.userName); // Set initial display name
+//           setAddress(data.data.address);
+//           setProfilePicture(data.data.profilePhotoUrl);
+//           setEmail(data.data.email);
+//         } else {
+//           alert(data.messege || "Failed to fetch user data.");
+//         }
+//       } catch (error) {
+//         console.error("Error fetching user data:", error);
+//         alert("An error occurred while fetching user data.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchUserData();
+//   }, [userId]);
+
+//   const handleSave = async () => {
+//     try {
+//       const formData = new FormData();
+//       formData.append("FullName", fullName);
+//       formData.append("Address", address);
+//       console.log(profilePhoto);
+
+//       // Only append profile picture if a new image is uploaded
+//       if (profilePhoto instanceof File) {
+//         formData.append("ProfilePhoto", profilePhoto);
+//       } else {
+//         formData.append("ProfilePhoto", null); // Explicitly set null if no new image is uploaded
+//       }
+
+//       const response = await fetch(
+//         `https://localhost:7216/api/User/${userId}`,
+//         {
+//           method: "POST",
+//           body: formData,
+//         }
+//       );
+
+//       const data = await response.json();
+//       if (data.isSuccess) {
+//         alert("Profile updated successfully!");
+//         setEditMode(false);
+//         setDisplayName(fullName); // Update display name after saving
+//       } else {
+//         alert(data.messege || "Failed to update profile.");
+//       }
+//     } catch (error) {
+//       console.error("Error updating profile:", error);
+//       alert("An error occurred while updating your profile.");
+//     }
+//   };
+
+//   if (loading) {
+//     return <p>Loading...</p>;
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-gray-100 p-6 w-full rounded-lg mx-auto mt-8 max-w-xl shadow-lg">
+//       <div className="flex flex-col items-center">
+//         <div className="relative">
+//           <img
+//             src={
+//               profilePhoto
+//                 ? profilePhoto
+//                 : "https://via.placeholder.com/150"
+//             }
+//             alt="Profile"
+//             className="w-32 h-32 rounded-full object-cover shadow-lg"
+//           />
+//           {editMode && (
+//             <label
+//               htmlFor="upload-profile-pic"
+//               className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer shadow-md"
+//             >
+//               Change
+//             </label>
+//           )}
+//           <input
+//             type="file"
+//             id="upload-profile-pic"
+//             className="hidden"
+//             onChange={(e) => {
+//               if (e.target.files && e.target.files[0]) {
+//                 console.log("Selected File:", e.target.files[0]);
+//                 setProfilePicture(e.target.files[0]); // Set the file object
+//               }
+//             }}
+//           />
+//         </div>
+//         <div className="mt-4 text-center">
+//           <p className="text-xl font-semibold text-gray-800">{displayName}</p>
+//           <p className="text-sm text-gray-500">{email}</p>
+//         </div>
+//       </div>
+
+//       <div className="mt-8 bg-white p-6 rounded-lg shadow-sm">
+//         <h2 className="text-lg font-semibold text-gray-800">
+//           Personal Information
+//         </h2>
+//         <div className="mt-4 space-y-4">
+//           <div>
+//             <label className="block text-sm font-medium text-gray-700">
+//               Full Name
+//             </label>
+//             {editMode ? (
+//               <input
+//                 type="text"
+//                 value={fullName}
+//                 onChange={(e) => setFullName(e.target.value)}
+//                 className="w-full mt-2 p-3 text-black border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+//               />
+//             ) : (
+//               <p className="text-gray-800">{fullName}</p>
+//             )}
+//           </div>
+
+//           <div>
+//             <label className="block text-sm font-medium text-gray-700">
+//               Address
+//             </label>
+//             {editMode ? (
+//               <input
+//                 type="text"
+//                 value={address}
+//                 onChange={(e) => setAddress(e.target.value)}
+//                 className="w-full mt-2 p-3 text-black border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+//               />
+//             ) : (
+//               <p className="text-gray-800">{address}</p>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="mt-8 flex flex-col gap-4">
+//         {editMode ? (
+//           <button
+//             onClick={handleSave}
+//             className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg shadow-lg hover:bg-green-700 transition duration-200"
+//           >
+//             Save Changes
+//           </button>
+//         ) : (
+//           <button
+//             onClick={() => setEditMode(true)}
+//             className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 transition duration-200"
+//           >
+//             Edit Profile
+//           </button>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default ProfilePage;
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function page() {
+function ProfilePage() {
   const [editMode, setEditMode] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [fullName, setFullName] = useState("");
+  const [displayName, setDisplayName] = useState(""); // Separate display name
+  const [address, setAddress] = useState("");
+  const [profilePhoto, setProfilePicture] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState("");
+  const [file , setFile] = useState("");
 
-  const handleEdit = () => {
-    setEditMode(!editMode);
-  };
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const userObject = JSON.parse(storedUser);
+        setUserId(userObject.userId);
+      } catch (error) {
+        console.error("Failed to parse user data from localStorage:", error);
+      }
+    }
+  }, []);
 
-  const handleSave = () => {
-    // Add logic to save user changes
-    alert("Changes saved successfully!");
-    setEditMode(false);
-  };
+  useEffect(() => {
+    if (!userId) return;
 
-  const handleDeleteAccount = () => {
-    // Add delete account logic
-    const confirmDelete = confirm(
-      "Are you sure you want to delete your account? This action cannot be undone."
-    );
-    if (confirmDelete) {
-      alert("Account deleted.");
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(
+          `https://localhost:7216/api/User/${userId}`
+        );
+        const data = await response.json();
+        if (data.isSuccess) {
+          setFullName(data.data.userName);
+          setDisplayName(data.data.userName); // Set initial display name
+          setAddress(data.data.address);
+          setProfilePicture(data.data.profilePhotoUrl);
+          setEmail(data.data.email);
+        } else {
+          alert(data.messege || "Failed to fetch user data.");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        alert("An error occurred while fetching user data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
+  const handleSave = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("FullName", fullName);
+      formData.append("Address", address);
+      console.log(file)
+      // Only append profile picture if a new image is uploaded
+        formData.append("ProfilePhoto", file);
+  
+      const response = await fetch(
+        `https://localhost:7216/api/User/${userId}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+  
+      const data = await response.json();
+      if (data.isSuccess) {
+        alert("Profile updated successfully!");
+        setEditMode(false);
+        setDisplayName(fullName); // Update display name after saving
+        // setProfilePicture(profilePhoto);
+      } else {
+        alert(data.messege || "Failed to update profile.");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("An error occurred while updating your profile.");
     }
   };
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
-    <div className="min-h-screen bg-white p-6 shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full rounded-2xl font-[sans-serif] overflow-hidden mx-auto mt-4 max-w-lg">
+    <div className="min-h-screen bg-gray-100 p-6 w-full rounded-lg mx-auto mt-8 max-w-xl shadow-lg">
       <div className="flex flex-col items-center">
         <div className="relative">
           <img
-            src="https://readymadeui.com/team-1.webp"
+            src={
+              profilePhoto
+                ? profilePhoto
+                : "https://via.placeholder.com/150"
+            }
             alt="Profile"
-            className="w-28 h-28 rounded-full object-cover shadow-md"
+            className="w-32 h-32 rounded-full object-cover shadow-lg"
           />
-          <label
-            htmlFor="upload-profile-pic"
-            className="absolute bottom-0 right-0 bg-indigo-600 text-white text-sm px-2 py-1 rounded-full cursor-pointer shadow-md"
-          >
-            Change
-          </label>
+          {editMode && (
+            <label
+              htmlFor="upload-profile-pic"
+              className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer shadow-md"
+            >
+              Change
+            </label>
+          )}
           <input
             type="file"
             id="upload-profile-pic"
             className="hidden"
             onChange={(e) => {
-              // Handle profile picture upload
-              alert("Profile picture updated!");
-            }}
+              if (e.target.files && e.target.files[0]) {
+                setFile(e.target.files[0]);
+                const imageUrl = URL.createObjectURL(e.target.files[0]);
+                console.log(imageUrl); // Create a temporary URL for preview
+                setProfilePicture(imageUrl); // Update the state with the image URL
+              }
+            }}            
           />
         </div>
-
         <div className="mt-4 text-center">
-          <p className="text-lg text-gray-800 font-bold">John Doe</p>
-          <p className="text-sm text-gray-500 mt-1">m77468934@gmail.com</p>
+          <p className="text-xl font-semibold text-gray-800">{displayName}</p>
+          <p className="text-sm text-gray-500">{email}</p>
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-8 bg-white p-6 rounded-lg shadow-sm">
         <h2 className="text-lg font-semibold text-gray-800">
           Personal Information
         </h2>
-        <div className="mt-4">
-          {editMode ? (
-            <>
-              <label className="block text-sm font-medium text-gray-700">
-                Username
-              </label>
+        <div className="mt-4 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Full Name
+            </label>
+            {editMode ? (
               <input
                 type="text"
-                defaultValue="John Doe"
-                className="w-full mt-2 p-3 rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-full mt-2 p-3 text-black border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              <label className="block text-sm font-medium text-gray-700 mt-4">
-                Email
-              </label>
-              <input
-                type="email"
-                defaultValue="m77468934@gmail.com"
-                className="w-full mt-2 p-3 rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <label className="block text-sm font-medium text-gray-700 mt-4">
-                Address
-              </label>
+            ) : (
+              <p className="text-gray-800">{fullName}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Address
+            </label>
+            {editMode ? (
               <input
                 type="text"
-                defaultValue="123 Street, City, Country"
-                className="w-full mt-2 p-3 rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full mt-2 p-3 text-black border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-            </>
-          ) : (
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm font-medium text-gray-700">Username</p>
-                <p className="text-gray-800">John Doe</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700">Email</p>
-                <p className="text-gray-800">m77468934@gmail.com</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700">Address</p>
-                <p className="text-gray-800">123 Street, City, Country</p>
-              </div>
-            </div>
-          )}
+            ) : (
+              <p className="text-gray-800">{address}</p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -117,27 +371,15 @@ function page() {
           </button>
         ) : (
           <button
-            onClick={handleEdit}
-            className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition duration-200"
+            onClick={() => setEditMode(true)}
+            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 transition duration-200"
           >
             Edit Profile
           </button>
         )}
-        <button
-          className="w-full py-3 bg-yellow-600 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-700 transition duration-200"
-          onClick={() => alert("Password change modal or page opens.")}
-        >
-          Change Password
-        </button>
-        {/* <button
-          className="w-full py-3 bg-red-600 text-white font-semibold rounded-lg shadow-lg hover:bg-red-700 transition duration-200"
-          onClick={handleDeleteAccount}
-        >
-          Delete Account
-        </button> */}
       </div>
     </div>
   );
 }
 
-export default page;
+export default ProfilePage;
