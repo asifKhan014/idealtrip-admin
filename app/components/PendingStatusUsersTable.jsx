@@ -72,6 +72,9 @@ const PendingStatusUsersTable = ({ data }) => {
                     <th className="sticky top-0 z-10 border-b border-gray-300 bg-white px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Status
                     </th>
+                    <th className="sticky top-0 z-10 border-b border-gray-300 bg-white px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      Files
+                    </th>
                     <th className="sticky top-0 z-10 border-b border-gray-300 bg-white py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900">
                       Actions
                     </th>
@@ -81,7 +84,7 @@ const PendingStatusUsersTable = ({ data }) => {
                   {people.map((person, personIdx) => (
                     <tr key={person.email}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">
-                        {person.name}
+                        {person.fullName}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {person.role}
@@ -90,8 +93,28 @@ const PendingStatusUsersTable = ({ data }) => {
                         {person.email}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {person.status}
+                        {person.status == 0 ? "Pending" : "Approved"}
                       </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {person.proofs && person.proofs.length > 0 ? (
+                          person.proofs.map((proof, idx) => (
+                            <div key={idx} className="mb-2">
+                              <p>{proof.documentType}:</p>
+                              <a
+                                href={proof.documentPath}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline"
+                              >
+                                View File
+                              </a>
+                            </div>
+                          ))
+                        ) : (
+                          <p>No proofs uploaded.</p>
+                        )}
+                      </td>
+
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium">
                         <button
                           onClick={() =>
