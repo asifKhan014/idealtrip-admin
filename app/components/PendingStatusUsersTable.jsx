@@ -17,8 +17,8 @@ const PendingStatusUsersTable = ({ data }) => {
 
       const endpoint =
         newStatus === "Accepted"
-          ? `https://localhost:7216/api/administration/approve-user/${guid}`
-          : `https://localhost:7216/api/administration/reject-user/${guid}`;
+          ? `http://localhost:5277/api/administration/approve-user/${guid}`
+          : `http://localhost:5277/api/administration/reject-user/${guid}`;
 
       const response = await axios.post(endpoint, null, {
         headers: {
@@ -27,8 +27,8 @@ const PendingStatusUsersTable = ({ data }) => {
       });
 
       if (response.data.isSuccess) {
-        setPeople((prevPeople) =>
-          prevPeople.filter((person) => person.userId !== guid) // Remove the user regardless of the status
+        setPeople(
+          (prevPeople) => prevPeople.filter((person) => person.userId !== guid) // Remove the user regardless of the status
         );
         alert(response.data.message);
       } else {
@@ -44,7 +44,9 @@ const PendingStatusUsersTable = ({ data }) => {
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold text-gray-900">Pending Users</h1>
+          <h1 className="text-base font-semibold text-gray-900">
+            Pending Users
+          </h1>
           <p className="mt-2 text-sm text-gray-700">
             A list Pending users in your account including their name, role,
             email, status, and related files.

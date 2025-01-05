@@ -22,14 +22,17 @@ export default function Home() {
           router.push("/login");
         }
 
-        const response = await axios.get("https://localhost:7216/api/administration/get-users", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Make sure the token is passed correctly
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:5277/api/administration/get-users",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Make sure the token is passed correctly
+            },
+          }
+        );
         const data = response.data.data ? response.data.data : [];
-        const tourists = data.filter(user => user.role === "Tourist");
-        const otherUsers = data.filter(user => user.role !== "Tourist");
+        const tourists = data.filter((user) => user.role === "Tourist");
+        const otherUsers = data.filter((user) => user.role !== "Tourist");
         setTourists(tourists);
         setOtherUsers(otherUsers);
       } catch (error) {
@@ -55,7 +58,7 @@ export default function Home() {
         console.log("User ID to delete:", userId);
 
         const result = await axios.delete(
-          `https://localhost:7216/api/administration/delete-user/${userId}`,
+          `https://localhost:5277/api/administration/delete-user/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -67,7 +70,9 @@ export default function Home() {
 
         if (result.data.isSuccess) {
           setTourists((prev) => prev.filter((user) => user.userId !== userId));
-          setOtherUsers((prev) => prev.filter((user) => user.userId !== userId));
+          setOtherUsers((prev) =>
+            prev.filter((user) => user.userId !== userId)
+          );
           alert("User deleted successfully.");
         } else {
           alert("Failed to delete user.");
@@ -78,7 +83,6 @@ export default function Home() {
       }
     }
   };
-
 
   return (
     <>

@@ -15,9 +15,9 @@ export default function Login() {
 
     try {
       console.log(Email);
-      console.log(Password)
+      console.log(Password);
       const result = await axios.post(
-        "https://localhost:7216/api/auth/admin-login",
+        "http://localhost:5277/api/auth/admin-login",
         { Email, Password },
         {
           headers: {
@@ -27,8 +27,8 @@ export default function Login() {
       );
 
       if (result.data.isSuccess) {
-        const token = result.data.messege;  // Token
-        const user = result.data.data;      // User data
+        const token = result.data.messege; // Token
+        const user = result.data.data; // User data
 
         // Set the token and user in the AuthContext and localStorage
         localStorage.setItem("token", token);

@@ -23,28 +23,42 @@ export default function UsersDetailCard() {
 
         // Concurrently fetch both endpoints using axios.all
         const [last30DaysResponse, allTimeResponse] = await axios.all([
-          axios.get("https://localhost:7216/api/administration/stats/last-30-days", { headers }),
-          axios.get("https://localhost:7216/api/administration/stats/all-time", { headers }),
+          axios.get(
+            "http://localhost:5277/api/administration/stats/last-30-days",
+            { headers }
+          ),
+          axios.get("http://localhost:5277/api/administration/stats/all-time", {
+            headers,
+          }),
         ]);
 
         // Handle last 30 days stats
         if (!last30DaysResponse.data.isSuccess) {
           throw new Error("Failed to fetch last 30 days stats.");
         }
-        const last30DaysFormattedStats = last30DaysResponse.data.data.map((item) => ({
-          name: item.role === "Tourist" ? "Tourists (Last 30 Days)" : `${item.role} (Last 30 Days)`,
-          stat: `${item.count}`,
-          previousStat: `${item.previousCount || 0}`, // Default to 0 if no previous data
-          change: `${item.count - (item.previousCount || 0)}`, // Calculate change
-          changeType: item.count >= (item.previousCount || 0) ? "increase" : "decrease", // Determine change type
-        }));
+        const last30DaysFormattedStats = last30DaysResponse.data.data.map(
+          (item) => ({
+            name:
+              item.role === "Tourist"
+                ? "Tourists (Last 30 Days)"
+                : `${item.role} (Last 30 Days)`,
+            stat: `${item.count}`,
+            previousStat: `${item.previousCount || 0}`, // Default to 0 if no previous data
+            change: `${item.count - (item.previousCount || 0)}`, // Calculate change
+            changeType:
+              item.count >= (item.previousCount || 0) ? "increase" : "decrease", // Determine change type
+          })
+        );
 
         // Handle all-time stats
         if (!allTimeResponse.data.isSuccess) {
           throw new Error("Failed to fetch all-time stats.");
         }
         const allTimeFormattedStats = allTimeResponse.data.data.map((item) => ({
-          name: item.role === "Tourist" ? "Tourists (All Time)" : `${item.role} (All Time)`,
+          name:
+            item.role === "Tourist"
+              ? "Tourists (All Time)"
+              : `${item.role} (All Time)`,
           stat: `${item.count}`,
           previousStat: `${item.previousCount || 0}`,
           change: `${item.change}`,
@@ -73,7 +87,10 @@ export default function UsersDetailCard() {
       <h3 className="text-base font-semibold text-gray-900">User Statistics</h3>
       <dl className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
         {combinedStats.map((item) => (
-          <div key={item.name} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
+          <div
+            key={item.name}
+            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
+          >
             <dt className="text-base font-normal text-gray-900">{item.name}</dt>
             <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
               <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
@@ -102,7 +119,8 @@ export default function UsersDetailCard() {
                   />
                 )}
                 <span className="sr-only">
-                  {item.changeType === "increase" ? "Increased" : "Decreased"} by{" "}
+                  {item.changeType === "increase" ? "Increased" : "Decreased"}{" "}
+                  by{" "}
                 </span>
                 {item.change}
               </div>
