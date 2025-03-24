@@ -17,7 +17,7 @@ export default function Login() {
       console.log(Email);
       console.log(Password)
       const result = await axios.post(
-        "https://localhost:7216/api/auth/admin-login",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/admin-login`,
         { Email, Password },
         {
           headers: {

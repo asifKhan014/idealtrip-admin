@@ -2,10 +2,11 @@
 import React, { useState,useEffect } from "react";
 import PendingStatusUsersTable from "../../components/PendingStatusUsersTable";
 import axios from "axios";
-function page() {
+function page({darkMode}) {
   const [loading, setLoading] = useState(false);
   const [pendingUsers,setPendingUsers] = useState([]);
   useEffect(() => {
+    console.log("From Pending Main Page",darkMode)
     const fetchUsers = async () => {
       setLoading(true);
       try {
@@ -15,7 +16,7 @@ function page() {
           router.push("/login");
         }
 
-        const pendingUsersResult = await axios.get("https://localhost:7216/api/administration/pending-users",{
+        const pendingUsersResult = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/pending-users`,{
           headers: {
             Authorization: `Bearer ${token}`, // Make sure the token is passed correctly
           },
@@ -33,7 +34,7 @@ function page() {
   }, []);
   return (
     <div>
-      <PendingStatusUsersTable data={pendingUsers}/>
+      <PendingStatusUsersTable data={pendingUsers} darkMode={darkMode}/>
     </div>
   );
 }

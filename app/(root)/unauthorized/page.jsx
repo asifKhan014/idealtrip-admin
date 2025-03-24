@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function UnauthorizedPage() {
+export default function UnauthorizedPage({darkMode}) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="text-center bg-white p-8 rounded-lg shadow-xl w-full max-w-md">

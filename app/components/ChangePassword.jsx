@@ -39,7 +39,7 @@ const handleSubmit = async (e) => {
 
   try {
     // Send POST request with Axios
-    const response = await axios.post("https://localhost:7216/api/auth/reset-password", {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/reset-password`, {
       userId,
       token,
       newPassword,

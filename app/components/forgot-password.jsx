@@ -13,7 +13,7 @@ function ForgotPassword() {
   
       // Send a POST request to the API with the email, setting the Content-Type to application/json
       const result = await axios.post(
-        "https://localhost:7216/api/auth/forgot-password",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/forgot-password`,
         {
           emailAddress,
         },

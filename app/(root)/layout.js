@@ -1,14 +1,73 @@
+// original
+
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import { useRouter } from "next/navigation";
+// import Sidebar from "../components/SideBar";
+
+// export default function RootLayout({ children }) {
+//   return (
+//     <div className="flex min-h-screen">
+//       <Sidebar />
+//       <div className="flex-1 ml-64 pr-0 pl-16 py-0 bg-blue-950">{children}</div>
+//     </div>
+//   );
+// }
+
+
+// "use client";
+
+// import { useState } from "react";
+// import React from "react";
+// import Sidebar from "../components/SideBar";
+
+// export default function RootLayout({ children }) {
+//   const [darkMode, setDarkMode] = useState(false);
+
+//   return (
+//     <div className={`flex min-h-screen ${darkMode ? "bg-gray-900" : "bg-white"}`}>
+//       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode}/>
+//       <div className={`flex-1 ml-64 pr-0 pl-16 py-0 ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+//         {React.cloneElement(children, { darkMode, setDarkMode })}
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
 import Sidebar from "../components/SideBar";
 
 export default function RootLayout({ children }) {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    console.log("From Layout.js (Initial Render):", darkMode);
+  }, []);
+
+  useEffect(() => {
+    console.log("From Layout.js (Updated):", darkMode);
+  }, [darkMode]);
+
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="flex-1 ml-64 p-6 bg-gray-100">{children}</div>
+    <div className={`flex min-h-screen ${darkMode ? "bg-gray-900" : "bg-white"}`}>
+      <Sidebar setDarkMode={setDarkMode} /> {/* Sidebar updates dark mode */}
+      <div className={`flex-1 ml-64 pr-0 pl-16 py-0 ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+        {React.Children.map(children, (child) =>
+          React.isValidElement(child)
+            ? React.cloneElement(child, { darkMode }) // Check if the element is valid
+            : child
+        )}
+      </div>
     </div>
   );
 }
+
+
+
+
