@@ -271,9 +271,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useTheme } from "../../context/ThemeContext";
 
-const PendingStatusUsersTable = ({ data, darkMode }) => {
+const PendingStatusUsersTable = ({ data}) => {
   const [people, setPeople] = useState([]);
+  const {darkMode,setDarkMode} = useTheme();
 
   useEffect(() => {
     setPeople(data);

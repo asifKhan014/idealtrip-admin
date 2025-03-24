@@ -341,19 +341,19 @@
 // import { FaMoon, FaSun } from "react-icons/fa";
 
 // export default function Sidebar({ setDarkMode }) {
-//   const [darkMode, setLocalDarkMode] = useState(false);
+//   const [darkMode, setDarkMode] = useState(false);
 
 //   // Load dark mode preference from localStorage (if available)
 //   useEffect(() => {
 //     const storedMode = localStorage.getItem("darkMode") === "true";
-//     setLocalDarkMode(storedMode);
+//     setDarkMode(storedMode);
 //     setDarkMode(storedMode);
 //   }, []);
 
 //   // Function to toggle dark mode
 //   const toggleDarkMode = () => {
 //     const newMode = !darkMode;
-//     setLocalDarkMode(newMode);
+//     setDarkMode(newMode);
 //     setDarkMode(newMode);
 //     localStorage.setItem("darkMode", newMode); // Save preference
 //   };
@@ -424,12 +424,13 @@
 
 
 
+import { useTheme } from "../../context/ThemeContext";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 
-export default function Sidebar({ setDarkMode }) {
-  const [darkMode, setLocalDarkMode] = useState(false);
+export default function Sidebar() {
+  const { darkMode, setDarkMode } = useTheme();
   const handleLogOut = () => {
          localStorage.removeItem("token");
        };
@@ -437,21 +438,19 @@ export default function Sidebar({ setDarkMode }) {
   // Load dark mode preference from localStorage (if available)
   useEffect(() => {
     const storedMode = localStorage.getItem("darkMode") === "true";
-    setLocalDarkMode(storedMode);
     setDarkMode(storedMode);
   }, []);
 
   // Function to toggle dark mode
   const toggleDarkMode = () => {
     const newMode = !darkMode;
-    setLocalDarkMode(newMode);
     setDarkMode(newMode);
     localStorage.setItem("darkMode", newMode); // Save preference
   };
 
   return (
     <div
-      className={`w-80 h-screen fixed top-0 left-0 shadow-lg flex flex-col transition-all duration-300 
+      className={`w-80 h-screen fixed top-0 left-0 shadow-lg flex flex-col 
       ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
     >
       {/* Brand Logo */}

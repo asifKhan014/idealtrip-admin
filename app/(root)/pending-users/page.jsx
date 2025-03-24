@@ -2,11 +2,12 @@
 import React, { useState,useEffect } from "react";
 import PendingStatusUsersTable from "../../components/PendingStatusUsersTable";
 import axios from "axios";
-function page({darkMode}) {
+import { useTheme } from "../../../context/ThemeContext"
+function page() {
   const [loading, setLoading] = useState(false);
   const [pendingUsers,setPendingUsers] = useState([]);
+  const {darkMode,setDarkMode} = useTheme();
   useEffect(() => {
-    console.log("From Pending Main Page",darkMode)
     const fetchUsers = async () => {
       setLoading(true);
       try {
@@ -33,8 +34,8 @@ function page({darkMode}) {
     fetchUsers();
   }, []);
   return (
-    <div>
-      <PendingStatusUsersTable data={pendingUsers} darkMode={darkMode}/>
+    <div className={`px-8 py-6 shadow-lg h-full ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+      <PendingStatusUsersTable data={pendingUsers}/>
     </div>
   );
 }

@@ -617,6 +617,7 @@
 
 "use client";
 import { useState, useEffect } from "react";
+import { useTheme } from "../../context/ThemeContext";
 import axios from "axios";
 import TouristTable from "../components/TouristsTable";
 import UsersDetailCard from "../components/StatisticCard";
@@ -626,16 +627,14 @@ import { FaBell} from "react-icons/fa";
 import { startSignalRConnection, stopSignalRConnection } from "../../utils/signalRService";
 import Spinner from "../components/Spinner"; // Assuming you have a Spinner component
 
-export default function Home({ darkMode }) {
+export default function Home() {
+  const {darkMode,setDarkMode} = useTheme();
   const [tourists, setTourists] = useState([]);
   const [otherUsers, setOtherUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    console.log("Inside useEffect (Home.js): darkMode =", darkMode); // Debugging log
-  }, [darkMode]);
+  
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
@@ -689,7 +688,7 @@ export default function Home({ darkMode }) {
   };
 
   return (
-    <div className={darkMode ? "bg-gray-800 text-white min-h-screen p-6 rounded-lg" : "bg-white text-black min-h-screen p-6 rounded-lg"}>
+    <div className={darkMode ? "bg-gray-800 text-white min-h-screen p-6" : "bg-white text-black min-h-screen p-6"}>
       <div className="flex justify-between items-center mb-6 ">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <div className="flex items-center space-x-4">

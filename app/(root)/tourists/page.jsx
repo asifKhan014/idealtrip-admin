@@ -1,7 +1,7 @@
 import React from "react";
 import TouristTable from "../../components/TouristsTable";
 
-function page({darkMode}) {
+function page() {
   return (
     <div>
       <TouristTable />

@@ -568,8 +568,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Spinner from "@/app/components/Spinner";
+import { useTheme } from "../../../context/ThemeContext";
 
-function ProfilePage({ darkMode }) {
+function ProfilePage() {
   const [editMode, setEditMode] = useState(false);
   const [fullName, setFullName] = useState("");
   const [displayName, setDisplayName] = useState(""); // Separate display name
@@ -578,6 +579,7 @@ function ProfilePage({ darkMode }) {
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [file, setFile] = useState("");
+  const {darkMode,setDarkMode} = useTheme();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -651,12 +653,108 @@ function ProfilePage({ darkMode }) {
   };
 
   return (
-    loading?
-    (<div className="flex justify-center items-center h-64">
-    <Spinner />
-  </div>):(
-    <div className={`flex justify-center items-center min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-      <div className="w-full max-w-4xl p-8 bg-white rounded-lg shadow-xl">
+  //   loading?
+  //   (<div className="flex justify-center items-center h-64">
+  //   <Spinner />
+  // </div>):(
+  //   <div className={`flex justify-center items-center min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
+  //     <div className="w-full max-w-4xl p-8 bg-white rounded-lg shadow-xl">
+  //       <div className="flex flex-col items-center">
+  //         <div className="relative w-32 h-32">
+  //           <img
+  //             src={
+  //               profilePhoto
+  //                 ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${profilePhoto}`
+  //                 : "https://via.placeholder.com/150"
+  //             }
+  //             alt="Profile"
+  //             className="w-32 h-32 rounded-full object-cover border-4 border-gray-300 shadow-md"
+  //           />
+  //           {editMode && (
+  //             <label
+  //               htmlFor="upload-profile-pic"
+  //               className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs px-3 py-1 rounded-full cursor-pointer shadow-md"
+  //             >
+  //               Change
+  //             </label>
+  //           )}
+  //           <input
+  //             type="file"
+  //             id="upload-profile-pic"
+  //             className="hidden"
+  //             onChange={(e) => {
+  //               if (e.target.files && e.target.files[0]) {
+  //                 setFile(e.target.files[0]);
+  //                 setProfilePicture(URL.createObjectURL(e.target.files[0]));
+  //               }
+  //             }}
+  //           />
+  //         </div>
+  //         <h2 className="mt-4 text-2xl font-bold">{displayName}</h2>
+  //         <p className="text-gray-500">{email}</p>
+  //       </div>
+
+  //       <div className="mt-6 p-6 bg-gray-50  rounded-lg">
+  //         <h2 className="text-lg font-semibold">Personal Information</h2>
+  //         <div className="mt-4 space-y-4">
+  //           <div>
+  //             <label className="block text-sm font-medium">Full Name</label>
+  //             {editMode ? (
+  //               <input
+  //                 type="text"
+  //                 value={fullName}
+  //                 onChange={(e) => setFullName(e.target.value)}
+  //                 className="w-full p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+  //               />
+  //             ) : (
+  //               <p className="text-gray-800">{fullName}</p>
+  //             )}
+  //           </div>
+
+  //           <div>
+  //             <label className="block text-sm font-medium">Address</label>
+  //             {editMode ? (
+  //               <input
+  //                 type="text"
+  //                 value={address}
+  //                 onChange={(e) => setAddress(e.target.value)}
+  //                 className="w-full p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+  //               />
+  //             ) : (
+  //               <p className="text-gray-800">{address}</p>
+  //             )}
+  //           </div>
+  //         </div>
+  //       </div>
+
+  //       <div className="mt-6 flex justify-center">
+  //         {editMode ? (
+  //           <button
+  //             onClick={handleSave}
+  //             className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700"
+  //           >
+  //             Save Changes
+  //           </button>
+  //         ) : (
+  //           <button
+  //             onClick={() => setEditMode(true)}
+  //             className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
+  //           >
+  //             Edit Profile
+  //           </button>
+  //         )}
+  //       </div>
+  //     </div>
+  //   </div>
+  //       )
+
+  loading ? (
+    <div className="flex justify-center items-center h-64">
+      <Spinner />
+    </div>
+  ) : (
+    <div className={`flex justify-center items-center min-h-screen  ${darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
+      <div className={`w-full max-w-4xl p-8 rounded-lg shadow-xl  ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"}`}>
         <div className="flex flex-col items-center">
           <div className="relative w-32 h-32">
             <img
@@ -666,12 +764,12 @@ function ProfilePage({ darkMode }) {
                   : "https://via.placeholder.com/150"
               }
               alt="Profile"
-              className="w-32 h-32 rounded-full object-cover border-4 border-gray-300 shadow-md"
+              className={`w-32 h-32 rounded-full object-cover border-4 shadow-md transition-colors duration-300 ${darkMode ? "border-gray-600" : "border-gray-300"}`}
             />
             {editMode && (
               <label
                 htmlFor="upload-profile-pic"
-                className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs px-3 py-1 rounded-full cursor-pointer shadow-md"
+                className={`absolute bottom-0 right-0 text-xs px-3 py-1 rounded-full cursor-pointer shadow-md transition-colors duration-300 ${darkMode ? "bg-blue-500 text-white" : "bg-blue-600 text-white"}`}
               >
                 Change
               </label>
@@ -689,37 +787,41 @@ function ProfilePage({ darkMode }) {
             />
           </div>
           <h2 className="mt-4 text-2xl font-bold">{displayName}</h2>
-          <p className="text-gray-500">{email}</p>
+          <p className={darkMode ? "text-gray-400" : "text-gray-500"}>{email}</p>
         </div>
 
-        <div className="mt-6 p-6 bg-gray-50  rounded-lg">
+        <div className={`mt-6 p-6 rounded-lg ${darkMode ? "bg-gray-700" : "bg-gray-50"}`}>
           <h2 className="text-lg font-semibold">Personal Information</h2>
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-medium">Full Name</label>
+              <label className={`block text-sm font-medium  ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                Full Name
+              </label>
               {editMode ? (
                 <input
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className={`w-full p-3 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${darkMode ? "bg-gray-600 border-gray-500 text-white" : "bg-white border-gray-300"}`}
                 />
               ) : (
-                <p className="text-gray-800">{fullName}</p>
+                <p className={`transition-colors duration-300 ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{fullName}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium">Address</label>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                Address
+              </label>
               {editMode ? (
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className={`w-full p-3 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${darkMode ? "bg-gray-600 border-gray-500 text-white" : "bg-white border-gray-300"}`}
                 />
               ) : (
-                <p className="text-gray-800">{address}</p>
+                <p className={darkMode ? "text-gray-200" : "text-gray-800"}>{address}</p>
               )}
             </div>
           </div>
@@ -729,14 +831,14 @@ function ProfilePage({ darkMode }) {
           {editMode ? (
             <button
               onClick={handleSave}
-              className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700"
+              className={`px-6 py-3 font-semibold rounded-lg shadow-md hover:opacity-90 ${darkMode ? "bg-green-500 text-white" : "bg-green-600 text-white"}`}
             >
               Save Changes
             </button>
           ) : (
             <button
               onClick={() => setEditMode(true)}
-              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
+              className={`px-6 py-3 font-semibold rounded-lg shadow-md hover:opacity-90 ${darkMode ? "bg-blue-500 text-white" : "bg-blue-600 text-white"}`}
             >
               Edit Profile
             </button>
@@ -744,7 +846,7 @@ function ProfilePage({ darkMode }) {
         </div>
       </div>
     </div>
-        )
+  )
   );
 }
 
