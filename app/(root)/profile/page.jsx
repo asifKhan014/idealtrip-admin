@@ -761,7 +761,7 @@ function ProfilePage() {
               src={
                 profilePhoto
                   ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${profilePhoto}`
-                  : "https://via.placeholder.com/150"
+                  : "/user.png"
               }
               alt="Profile"
               className={`w-32 h-32 rounded-full object-cover border-4 shadow-md transition-colors duration-300 ${darkMode ? "border-gray-600" : "border-gray-300"}`}

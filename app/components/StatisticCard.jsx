@@ -233,21 +233,15 @@ export default function UsersDetailCard({ darkMode }) {
               <div
                 className={classNames(
                   item.changeType === "increase"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800",
-                  "inline-flex items-baseline rounded-full px-3 py-1 text-sm font-medium"
+                    ? " text-green-800"
+                    : " text-red-800",
+                  "inline-flex items-baseline rounded-full px-3 py-1 text-2xl font-medium"
                 )}
               >
                 {item.changeType === "increase" ? (
-                  <ArrowUpIcon
-                    aria-hidden="true"
-                    className="-ml-1 mr-1 h-5 w-5 shrink-0 self-center text-green-500"
-                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#15c408" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
                 ) : (
-                  <ArrowDownIcon
-                    aria-hidden="true"
-                    className="-ml-1 mr-1 h-5 w-5 shrink-0 self-center text-red-500"
-                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-down"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/></svg>
                 )}
                 <span className="sr-only">
                   {item.changeType === "increase" ? "Increased" : "Decreased"} by{" "}

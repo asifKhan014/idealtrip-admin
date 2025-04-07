@@ -270,12 +270,14 @@
 
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useTheme } from "../../context/ThemeContext";
 
 const PendingStatusUsersTable = ({ data}) => {
   const [people, setPeople] = useState([]);
   const {darkMode,setDarkMode} = useTheme();
+  const router = useRouter();
 
   useEffect(() => {
     setPeople(data);
@@ -304,6 +306,11 @@ const PendingStatusUsersTable = ({ data}) => {
       alert("An error occurred while updating user status.");
     }
   };
+
+  const handleDetailsClick = (userId)=>
+  {
+    router.push(`/user-details?userId=${userId}`);
+  }
 
   return (
     <div className={`px-8 py-6 shadow-lg rounded-xl ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
@@ -377,6 +384,12 @@ const PendingStatusUsersTable = ({ data}) => {
                           className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-500 transition"
                         >
                           Reject
+                        </button>
+                        <button
+                          onClick={() => handleDetailsClick(person.userId)}
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-500 transition"
+                        >
+                          Details
                         </button>
                       </div>
                     </td>
