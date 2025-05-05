@@ -639,53 +639,61 @@ export default function Home() {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) router.push("/login");
-
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/get-users`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
           }
         );
+  
         const data = response.data.data || [];
-        console.log("user fetched");
+        console.log("User fetched");
         console.log(darkMode);
         setTourists(data.filter((user) => user.role === "Tourist"));
         setOtherUsers(data.filter((user) => user.role !== "Tourist"));
       } catch (error) {
-        if (error.response?.status === 401) router.push("/login");
-        console.error("Error fetching users:", error);
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          router.push("/login"); // ⬅️ Redirect on 401
+        } else {
+          console.error("Error fetching users:", error);
+          alert("Failed to fetch users.");
+        }
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchUsers();
   }, []);
-
+  
   const handleDelete = async (userId) => {
     if (confirm("Are you sure you want to delete this user?")) {
       try {
-        const token = localStorage.getItem("token");
         const result = await axios.delete(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/delete-user/${userId}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
           }
         );
-
+  
         if (result.data.isSuccess) {
           setTourists((prev) => prev.filter((user) => user.userId !== userId));
           setOtherUsers((prev) => prev.filter((user) => user.userId !== userId));
           alert("User deleted successfully.");
-        } else alert("Failed to delete user.");
+        } else {
+          alert(result.data.message || "Failed to delete user.");
+        }
       } catch (error) {
-        console.error("Error deleting user:", error);
-        alert("Failed to delete user.");
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          router.push("/login");
+        } else {
+          console.error("Error deleting user:", error);
+          alert("Failed to delete user.");
+        }
       }
     }
   };
+  
 
   return (
     <div className={darkMode ? "bg-gray-800 text-white min-h-screen p-6" : "bg-white text-black min-h-screen p-6"}>

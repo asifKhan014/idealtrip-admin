@@ -132,21 +132,74 @@ export default function UsersDetailCard({ darkMode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       setLoading(true);
+  //       setError(null);
+
+  //       // Concurrently fetch both endpoints using axios.all
+  //       const [last30DaysResponse, allTimeResponse] = await axios.all([
+  //         axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/stats/last-30-days`, {
+  //           withCredentials: true, // Ensures cookies are sent with the request
+  //         }),
+  //         axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/stats/all-time`, {
+  //           withCredentials: true, // Ensures cookies are sent with the request
+  //         }),
+  //       ]);
+        
+
+  //       // Handle last 30 days stats
+  //       if (!last30DaysResponse.data.isSuccess) {
+  //         throw new Error("Failed to fetch last 30 days stats.");
+  //       }
+  //       const last30DaysFormattedStats = last30DaysResponse.data.data.map((item) => ({
+  //         name: item.role === "Tourist" ? "Tourists (Last 30 Days)" : `${item.role} (Last 30 Days)`,
+  //         stat: `${item.count}`,
+  //         previousStat: `${item.previousCount || 0}`, // Default to 0 if no previous data
+  //         change: `${item.count - (item.previousCount || 0)}`, // Calculate change
+  //         changeType: item.count >= (item.previousCount || 0) ? "increase" : "decrease", // Determine change type
+  //       }));
+
+  //       // Handle all-time stats
+  //       if (!allTimeResponse.data.isSuccess) {
+  //         throw new Error("Failed to fetch all-time stats.");
+  //       }
+  //       const allTimeFormattedStats = allTimeResponse.data.data.map((item) => ({
+  //         name: item.role === "Tourist" ? "Tourists (All Time)" : `${item.role} (All Time)`,
+  //         stat: `${item.count}`,
+  //         previousStat: `${item.previousCount || 0}`,
+  //         change: `${item.change}`,
+  //         changeType: item.change >= 0 ? "increase" : "decrease",
+  //       }));
+
+  //       setLast30DaysStats(last30DaysFormattedStats);
+  //       setAllTimeStats(allTimeFormattedStats);
+  //     } catch (err) {
+  //       setError(err.response?.data?.message || err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   fetchData();
+  // }, []);
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true);
         setError(null);
-
-        const token = localStorage.getItem("token");
-        const headers = { Authorization: `Bearer ${token}` };
-
+  
         // Concurrently fetch both endpoints using axios.all
         const [last30DaysResponse, allTimeResponse] = await axios.all([
-          axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/stats/last-30-days`, { headers }),
-          axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/stats/all-time`, { headers }),
+          axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/stats/last-30-days`, {
+            withCredentials: true,
+          }),
+          axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/stats/all-time`, {
+            withCredentials: true,
+          }),
         ]);
-
+  
         // Handle last 30 days stats
         if (!last30DaysResponse.data.isSuccess) {
           throw new Error("Failed to fetch last 30 days stats.");
@@ -154,11 +207,11 @@ export default function UsersDetailCard({ darkMode }) {
         const last30DaysFormattedStats = last30DaysResponse.data.data.map((item) => ({
           name: item.role === "Tourist" ? "Tourists (Last 30 Days)" : `${item.role} (Last 30 Days)`,
           stat: `${item.count}`,
-          previousStat: `${item.previousCount || 0}`, // Default to 0 if no previous data
-          change: `${item.count - (item.previousCount || 0)}`, // Calculate change
-          changeType: item.count >= (item.previousCount || 0) ? "increase" : "decrease", // Determine change type
+          previousStat: `${item.previousCount || 0}`,
+          change: `${item.count - (item.previousCount || 0)}`,
+          changeType: item.count >= (item.previousCount || 0) ? "increase" : "decrease",
         }));
-
+  
         // Handle all-time stats
         if (!allTimeResponse.data.isSuccess) {
           throw new Error("Failed to fetch all-time stats.");
@@ -170,19 +223,26 @@ export default function UsersDetailCard({ darkMode }) {
           change: `${item.change}`,
           changeType: item.change >= 0 ? "increase" : "decrease",
         }));
-
+  
         setLast30DaysStats(last30DaysFormattedStats);
         setAllTimeStats(allTimeFormattedStats);
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        console.error("Stats fetch error:", err);
+  
+        if (err.response?.status === 401) {
+          alert("Session expired. Redirecting to login...");
+          router.push("/login");
+        } else {
+          setError(err.response?.data?.message || err.message || "Unexpected error occurred.");
+        }
       } finally {
         setLoading(false);
       }
     }
-
+  
     fetchData();
   }, []);
-
+  
   if (loading) {
     return (
       <div className="flex justify-center items-center h-40">

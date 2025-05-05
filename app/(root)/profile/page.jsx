@@ -584,20 +584,25 @@ function ProfilePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("token");
-
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/User`,
           {
             method: "GET",
+            credentials: "include", // 🔐 Send cookies
             headers: {
-              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
         );
-
+  
+        if (response.status === 401) {
+          alert("Session expired. Please log in again.");
+          router.push("/login");
+          return;
+        }
+  
         const data = await response.json();
+  
         if (data.isSuccess) {
           setFullName(data.data.userName);
           setDisplayName(data.data.userName);
@@ -614,30 +619,35 @@ function ProfilePage() {
         setLoading(false);
       }
     };
-
+  
     fetchUserData();
   }, []);
+  
 
   const handleSave = async () => {
     try {
       const formData = new FormData();
       formData.append("FullName", fullName);
       formData.append("Address", address);
-      formData.append("ProfilePhoto", file);
-
-      const token = localStorage.getItem("token");
-
+      if (file) {
+        formData.append("ProfilePhoto", file);
+      }
+  
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/User/`,
         {
           method: "POST",
           body: formData,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: "include", // 🔐 Send cookies
         }
       );
-
+  
+      if (response.status === 401) {
+        alert("Session expired. Please log in again.");
+        router.push("/login");
+        return;
+      }
+  
       const data = await response.json();
       if (data.isSuccess) {
         alert("Profile updated successfully!");
@@ -651,7 +661,7 @@ function ProfilePage() {
       alert("An error occurred while updating your profile.");
     }
   };
-
+  
   return (
   //   loading?
   //   (<div className="flex justify-center items-center h-64">

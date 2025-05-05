@@ -285,27 +285,32 @@ const PendingStatusUsersTable = ({ data}) => {
 
   const handleStatusChange = async (guid, newStatus) => {
     try {
-      const token = localStorage.getItem("token");
       const endpoint =
         newStatus === "Accepted"
           ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/approve-user/${guid}`
           : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/reject-user/${guid}`;
-
+  
       const response = await axios.post(endpoint, null, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true, // 🔐 Send cookies
       });
-
+  
       if (response.data.isSuccess) {
         setPeople((prev) => prev.filter((person) => person.userId !== guid));
-        alert(response.data.message);
+        alert(response.data.message || "Status updated successfully.");
       } else {
-        alert(`Error: ${response.data.message}`);
+        alert(`Error: ${response.data.message || "Failed to update status."}`);
       }
     } catch (error) {
-      console.error("Error updating user status:", error);
-      alert("An error occurred while updating user status.");
+      if (error.response?.status === 401) {
+        alert("Session expired or unauthorized. Redirecting to login...");
+        router.push("/login");
+      } else {
+        console.error("Error updating user status:", error);
+        alert("An error occurred while updating user status.");
+      }
     }
   };
+  
 
   const handleDetailsClick = (userId)=>
   {

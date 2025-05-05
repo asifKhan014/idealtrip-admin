@@ -11,28 +11,31 @@ function page() {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          alert("User is not authenticated. Please log in.");
-          router.push("/login");
-        }
-
-        const pendingUsersResult = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/pending-users`,{
-          headers: {
-            Authorization: `Bearer ${token}`, // Make sure the token is passed correctly
-          },
-        })
-        const pendingUsersdata = pendingUsersResult.data.data? pendingUsersResult.data.data:[]
-        setPendingUsers(pendingUsersdata);
+        const pendingUsersResult = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/administration/pending-users`,
+          {
+            withCredentials: true, // 🔐 Include cookies
+          }
+        );
+  
+        const pendingUsersData = pendingUsersResult.data.data ?? [];
+        setPendingUsers(pendingUsersData);
       } catch (error) {
         console.error("Error fetching users:", error);
-        alert("Failed to fetch user data.");
+        if (error.response?.status === 401) {
+          alert("Session expired or unauthorized. Please log in.");
+          router.push("/login");
+        } else {
+          alert("Failed to fetch user data.");
+        }
       } finally {
         setLoading(false);
       }
-    };    
+    };
+  
     fetchUsers();
   }, []);
+  
   return (
     <div className={`px-8 py-6 shadow-lg h-full ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
       <PendingStatusUsersTable data={pendingUsers}/>
