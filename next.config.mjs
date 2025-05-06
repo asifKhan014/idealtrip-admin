@@ -10,6 +10,14 @@ const nextConfig = {
           : [])
       ].filter(Boolean), // Remove any undefined values
     },
+    async rewrites() {
+      return [
+        {
+          source: '/api/:path*', // Frontend requests starting with /api
+          destination: 'http://localhost:7216/api/:path*', // Redirecting to backend
+        },
+      ];
+    },
     // You can add other Next.js config options here
   };
   

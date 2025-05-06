@@ -54,13 +54,12 @@ export default function Login() {
       console.log(Password);
   
       const result = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/admin-login`,
+        `/api/auth/admin-login`,
         { Email, Password },
         {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true, // 🔐 Include cookies for auth
         }
       );
   
