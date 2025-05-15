@@ -11,14 +11,51 @@ export default function Login() {
   const [error, setError] = useState("");
   const router = useRouter();
 
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+
+  //   try {
+  //     console.log(Email);
+  //     console.log(Password)
+  //     const result = await axios.post(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/admin-login`,
+  //       { Email, Password },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (result.data.isSuccess) {
+  //       const token = result.data.messege;  // Token
+  //       const user = result.data.data;      // User data
+
+  //       // Set the token and user in the AuthContext and localStorage
+  //       localStorage.setItem("token", token);
+  //       localStorage.setItem("user", JSON.stringify(user));
+  //       // Redirect to home page
+  //       router.push("/");
+  //     }
+  //   } catch (error) {
+  //     if (error.response) {
+  //       console.log(error.response.data);
+  //       setError(error.response.data.messege || "Unexpected error");
+  //     } else {
+  //       console.error("Error:", error.message);
+  //       setError("Login failed: An unexpected error occurred.");
+  //     }
+  //   }
+  // };
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     try {
       console.log(Email);
-      console.log(Password)
+      console.log(Password);
+  
       const result = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/admin-login`,
+        `/api/auth/admin-login`,
         { Email, Password },
         {
           headers: {
@@ -26,15 +63,14 @@ export default function Login() {
           },
         }
       );
-
+  
       if (result.data.isSuccess) {
-        const token = result.data.messege;  // Token
-        const user = result.data.data;      // User data
-
-        // Set the token and user in the AuthContext and localStorage
-        localStorage.setItem("token", token);
+        const user = result.data.data; // Get user data (no token)
+  
+        // Optionally store user info if needed (but NOT the token)
         localStorage.setItem("user", JSON.stringify(user));
-        // Redirect to home page
+  
+        // ✅ Redirect to home page
         router.push("/");
       }
     } catch (error) {
@@ -47,7 +83,7 @@ export default function Login() {
       }
     }
   };
-
+  
   const handleForgetPassword = () => {
     router.push("/forgot-password");
   };

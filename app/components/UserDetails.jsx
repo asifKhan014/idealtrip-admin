@@ -625,29 +625,37 @@ export default function UserDetailsPage({ userId }) {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const token = localStorage.getItem("token");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/User/${userId}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            method: 'GET',
+            credentials: 'include', // 🔐 Include HttpOnly cookies
           }
         );
-
+  
+        if (response.status === 401) {
+          alert("Session expired. Please log in again.");
+          router.push("/login");
+          return;
+        }
+  
         const data = await response.json();
         if (data.isSuccess) {
           setUserData(data.data);
         } else {
-          setError(data.Messege || "Failed to fetch user details");
+          setError(data.message || "Failed to fetch user details");
         }
       } catch (err) {
-        setError("An error occurred while fetching user details");
+        console.error("Error fetching user details:", err);
+        setError("An error occurred while fetching user details.");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchUserDetails();
   }, [userId]);
+  
 
   if (loading) return <Spinner />;
   if (error) return <ErrorPage message={error} darkMode={darkMode} />;
