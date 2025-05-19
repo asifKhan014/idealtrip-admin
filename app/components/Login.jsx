@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Login() {
   const [Email, setEmail] = useState("");
@@ -92,8 +93,8 @@ export default function Login() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
+            src="/logo1.png"
             alt="Your Company"
-            src="/travel.png"
             className="mx-auto h-20 w-auto"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
