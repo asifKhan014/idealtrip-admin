@@ -581,8 +581,7 @@ function ProfilePage() {
   const [file, setFile] = useState("");
   const {darkMode,setDarkMode} = useTheme();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
+  const fetchUserData = async () => {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/User`,
@@ -607,7 +606,7 @@ function ProfilePage() {
           setFullName(data.data.userName);
           setDisplayName(data.data.userName);
           setAddress(data.data.address);
-          setProfilePicture(data.data.profilePhotoUrl);
+          setProfilePicture(data.data.profilePhotoPath);
           setEmail(data.data.email);
         } else {
           alert(data.message || "Failed to fetch user data.");
@@ -619,7 +618,7 @@ function ProfilePage() {
         setLoading(false);
       }
     };
-  
+  useEffect(() => {
     fetchUserData();
   }, []);
   
@@ -651,6 +650,7 @@ function ProfilePage() {
       const data = await response.json();
       if (data.isSuccess) {
         alert("Profile updated successfully!");
+        fetchUserData();
         setEditMode(false);
         setDisplayName(fullName);
       } else {
@@ -770,7 +770,9 @@ function ProfilePage() {
             <img
               src={
                 profilePhoto
-                  ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${profilePhoto}`
+                  ? profilePhoto.startsWith("blob:")
+                    ? profilePhoto // preview from URL.createObjectURL
+                    : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${profilePhoto}` // saved file path
                   : "/user.png"
               }
               alt="Profile"
