@@ -650,6 +650,7 @@ function ProfilePage() {
       const data = await response.json();
       if (data.isSuccess) {
         alert("Profile updated successfully!");
+        window.location.reload();
         fetchUserData();
         setEditMode(false);
         setDisplayName(fullName);
